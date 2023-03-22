@@ -32,7 +32,8 @@ def register():
 
         # Check if username or email already exists
         cursor = mysql_connection.cursor()
-        cursor.execute("SELECT * FROM users WHERE username=%s OR email=%s", (username, email))
+        cursor.execute(
+            "SELECT * FROM users WHERE username=%s OR email=%s", (username, email))
         user = cursor.fetchone()
 
         if user:
@@ -40,7 +41,8 @@ def register():
             return render_template("register.html", error=error)
         else:
             # Insert new user into database
-            cursor.execute("INSERT INTO users (username, email, password) VALUES (%s, %s, %s)", (username, email, password))
+            cursor.execute(
+                "INSERT INTO users (username, email, password) VALUES (%s, %s, %s)", (username, email, password))
             mysql_connection.commit()
             session["username"] = username
             return redirect(url_for("login"))
@@ -57,12 +59,13 @@ def login():
 
         # Check if user exists and password is correct
         cursor = mysql_connection.cursor()
-        cursor.execute("SELECT * FROM users WHERE username=%s AND password=%s", (username, password))
+        cursor.execute(
+            "SELECT * FROM users WHERE username=%s AND password=%s", (username, password))
         user = cursor.fetchone()
 
         if user:
             session["username"] = username
-            return redirect(url_for("camera"))
+            return redirect(url_for("home"))
         else:
             error = "Invalid username or password"
             return render_template("login.html", error=error)
@@ -72,14 +75,23 @@ def login():
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
+        # get form data
         name = request.form['name']
         email = request.form['email']
         phone = request.form['phone']
         message = request.form['message']
-        # Code to store the contact information in MySQL Workbench
+
+        # save form data to database
+        cur = mysql_connection.cursor()
+        cur.execute("INSERT INTO contact_info (name, email,phone, message) VALUES (%s, %s, %s, %s)", (name, email,phone, message))
+        mysql_connection.commit()
+        cur.close()
+
+        # display success message
         return render_template('thanks.html')
     else:
         return render_template('contact.html')
+    
 
 # profile route
 @app.route('/profile')
@@ -104,12 +116,13 @@ def logout():
 # home page route
 @app.route('/')
 def home():
-    if 'username' in session:
+    # if 'username' in session:
         # code to render the home page for logged-in users
-        return render_template('index.html', username=session['username'])
-    else:
+       # return render_template('index.html', username=session['username'])
+    # else:
         # code to redirect to the login page for non-logged-in users
-        return redirect(url_for('login'))
+        # return redirect(url_for('register'))
+        return render_template("index.html")
 
 @app.route('/camera', methods = ['GET', 'POST'])
 def camera():
