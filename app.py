@@ -43,7 +43,7 @@ def register():
             cursor.execute("INSERT INTO users (username, email, password) VALUES (%s, %s, %s)", (username, email, password))
             mysql_connection.commit()
             session["username"] = username
-            return redirect(url_for("profile"))
+            return redirect(url_for("login"))
 
     return render_template("register.html")
 
@@ -62,10 +62,10 @@ def login():
 
         if user:
             session["username"] = username
-            return redirect(url_for("profile"))
+            return redirect(url_for("camera"))
         else:
             error = "Invalid username or password"
-            return render_template("profile.html", error=error)
+            return render_template("login.html", error=error)
 
     return render_template("login.html")
 
@@ -81,21 +81,35 @@ def contact():
     else:
         return render_template('contact.html')
 
-@app.route("/profile")
+# profile route
+@app.route('/profile')
 def profile():
-    if "username" in session:
-        return render_template("profile.html", username=session["username"])
+    if 'username' in session:
+        # get the username and email from the session
+        username = session['username']
+        email = session['email']
+        # render the profile template and pass the variables
+        return render_template('profile.html', username=username, email=email)
     else:
-        return redirect(url_for("login"))
+        # redirect to the login page if the user is not logged in
+        return redirect(url_for('login'))
 
-@app.route("/logout")
+
+# logout route
+@app.route('/logout')
 def logout():
-    session.pop("username", None)
-    return redirect(url_for("home"))
+    session.clear()
+    return redirect(url_for('login'))
 
+# home page route
 @app.route('/')
 def home():
-    return render_template("index.html")
+    if 'username' in session:
+        # code to render the home page for logged-in users
+        return render_template('index.html', username=session['username'])
+    else:
+        # code to redirect to the login page for non-logged-in users
+        return redirect(url_for('login'))
 
 @app.route('/camera', methods = ['GET', 'POST'])
 def camera():
