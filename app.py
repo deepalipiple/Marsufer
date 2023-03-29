@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 import mysql.connector
 from markupsafe import escape
 import cv2
+from tensorflow import keras
 from tensorflow.keras.models import load_model
 import numpy as np
 import tensorflow as tf
