@@ -1,7 +1,5 @@
 *.png
-MovieDataset/
 .vscode/
 *.txt
-*.log
 .gitignore
 
