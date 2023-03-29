@@ -132,7 +132,7 @@ def camera():
     model = tf.keras.models.load_model('final_model.h5')
     face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     output=[]
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
     while (i<=30):
         ret, img = cap.read()
         faces = face_cascade.detectMultiScale(img,1.05,5)
