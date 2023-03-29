@@ -3,3 +3,4 @@ MovieDataset/
 .vscode/
 *.txt
 *.log
+.gitignore
