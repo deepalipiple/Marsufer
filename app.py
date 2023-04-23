@@ -9,6 +9,15 @@ import tensorflow as tf
 import statistics as st
 from flask_mysqldb import MySQL
 import mysql.connector
+import pandas as pd
+import json
+import imdb
+import urllib
+import time
+import concurrent.futures
+
+
+
 
 
 app = Flask(__name__)
@@ -17,8 +26,8 @@ app.secret_key = 'my_secret_key'
 # MySQL configuration
 mysql_connection = mysql.connector.connect(
   host="localhost",
-  user="root",
-  password="Deepali@123",
+  user="nikhil_root",
+  password="test",
   database="flask_db"
 )
 
@@ -55,6 +64,7 @@ def register():
 def login():
     if request.method == "POST":
         # Get form data
+
         username = request.form["username"]
         password = request.form["password"]
 
@@ -133,7 +143,7 @@ def camera():
     model = tf.keras.models.load_model('final_model.h5')
     face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     output=[]
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
     while (i<=30):
         ret, img = cap.read()
         faces = face_cascade.detectMultiScale(img,1.05,5)
@@ -193,7 +203,59 @@ def moviesAngry():
     return render_template("moviesAngry.html")
 
 
+@app.route('/getMoviesBasedOncapturedEmotions')
+def read_excel_data_based_on_emotion():
 
+    sheet_name = request.args.get('emotion')
+
+    try:
+        # Read the Excel sheet into a pandas dataframe
+        df = pd.read_excel('combined_movie_emotions_sheet.xlsx',sheet_name.capitalize() + ' Movies')
+
+        # Convert the dataframe to a JSON object
+        json_data = df.to_json(orient='records')
+        python_obj = json.loads(json_data)
+        my_list = []
+        ia = imdb.IMDb()
+
+        imdb_ids = []
+        for obj in python_obj:
+            imdb_url = obj["movie_imdb_link"]
+            imdb_id = imdb_url.split("/")[-2]
+            numeric_id = imdb_id[2:]
+            imdb_ids.append(numeric_id)
+
+        my_list = fetch_movie_info(imdb_ids)
+        
+        # Return the JSON object
+        return render_template("moviesAngry.html",my_list=my_list)
+    
+
+    except FileNotFoundError:
+        # If the file is not found, return an error message
+        return f"Error: File '{sheet_name}' not found"
+
+
+def fetch_movie_info(movie_ids):
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        # submit the get_movie_info function to the executor for each movie_id
+        future_to_movie_id = {executor.submit(get_movie_info, movie_id): movie_id for movie_id in movie_ids}
+        my_list = []
+        # iterate over the completed futures to get the movie information
+        for future in concurrent.futures.as_completed(future_to_movie_id):
+            movie_id = future_to_movie_id[future]
+            try:
+             movie_info = future.result()
+             my_list.append(movie_info) 
+            except Exception as e:
+             print(f"Movie ID: {movie_id}, Exception: {e}")
+    return my_list           
+
+def get_movie_info(movie_id):
+    ia = imdb.IMDb()
+    movie = ia.get_movie(movie_id)
+    return {"imdb_url":f"https://www.imdb.com/title/tt{movie.movieID}/", "poster_url": movie["full-size cover url"]}
+                
 
 if __name__ =='__main__':
     app.run(host="localhost", port=8000, debug=True)

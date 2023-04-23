@@ -28,57 +28,15 @@
       <section class="text-gray-600 body-font">
         <div class="container px-5 py-24 mx-auto">
           <div class="flex flex-wrap -m-4">
+            {% for movie in my_list %}
             <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <a href="https://www.imdb.com/title/tt5462602/"><img src="../static/Angry_Movies/bg3.png"></a>              
+              <a href="{{ movie.imdb_url }}"><img src="{{ movie.poster_url }}"></a>              
             </div>
-
-            <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <a href="https://www.imdb.com/title/tt0021749/"><img src="../static/Angry_Movies/bg18.png"></a>
-            </div>
-
-            <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <a href="https://www.imdb.com/title/tt0039628/"><img src="../static/Angry_Movies/bg20.png"></a>
-            </div>
-
-            <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <a href="https://www.imdb.com/title/tt0032904/"><img src="../static/Angry_Movies/bg8.png"></a>
-            </div>
-
-            <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <a href="https://www.imdb.com/title/tt0052357/"><img src="../static/Angry_Movies/bg9.png"></a>
-            </div>
-
-            <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <a href="https://www.imdb.com/title/tt0047296/"><img src="../static/Angry_Movies/bg10.png"></a>
-            </div>
-
-            <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <a href="https://www.imdb.com/title/tt0046250/"><img src="../static/Angry_Movies/bg11.png"></a>
-            </div>
-
-            <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <a href="https://www.imdb.com/title/tt0043278/"><img src="../static/Angry_Movies/bg13.png"></a>
-            </div>
-
-            <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <a href="https://www.imdb.com/title/tt2402927/"><img src="../static/Angry_Movies/bg14.png"></a>
-            </div>
-
-            <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <a href="https://www.imdb.com/title/tt2209418/"><img src="../static/Angry_Movies/bg15.png"></a>
-            </div>
-
-            <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <a href="https://www.imdb.com/title/tt0040725/"><img src="../static/Angry_Movies/bg16.png"></a>
-            </div>
-
-            <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <a href="https://www.imdb.com/title/tt0043265/"><img src="../static/Angry_Movies/bg17.png"></a>
-            </div>
-
+            {% endfor %}
           </div>
         </div>
       </section>
+    
       <footer class="text-gray-600 body-font -my+8">
         <div class="container px-5 py-8 mx-auto flex items-center sm:flex-row flex-col">
           <span class="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start">

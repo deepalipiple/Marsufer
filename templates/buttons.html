@@ -34,8 +34,8 @@
             <h1 style="font-family:Bio-Rhyme; color: bisque;margin:40px;font:40px; font-size:70px">Let's have fun...!</h1>
             <h2 style="font-family:Bio-Rhyme; color: bisque;margin:40px;font:40px">What would you prefer</h2>
             {% endif %}
-            <a href="http://localhost:5000/movies/{{final_output}}" class="btn">MOVIES</a>
-                <a href="http://localhost:5000/songs/{{final_output}}" class="btn">SONGS</a>
+            <a href="http://localhost:8000/getMoviesBasedOncapturedEmotions?emotion={{final_output}}" class="btn">MOVIES</a>
+                <a href="http://localhost:8000/songs/{{final_output}}" class="btn">SONGS</a>
           </div>
           <div class="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">
             <img class="object-cover object-center rounded" alt="hero" src="../static/side_image.svg">
